@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from agcal.modules.userauth import UserAuth
+from agcal.modules.usermanager import UserManager
 
 import json
 
 userauth = UserAuth()
+usermanager = UserManager()
 
 
 def index(request):
