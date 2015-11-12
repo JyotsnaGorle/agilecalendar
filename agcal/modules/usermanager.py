@@ -5,6 +5,18 @@ import hashlib
 
 class UserManager:
 
+    def show_user(self, username):
+        usernames = User.objects.filter(username=username)
+
+        if not usernames.count():
+            response = '{"error": "No such user"}'
+        else:
+            user = usernames.first()
+            response = '{"username": "%s", "name": "%s", "email": "%s"}' % (
+                user.username, user.name, user.email)
+
+        return response
+
     def add_user(self, username, password, name, email):
         user = User(username, password, name, email)
 
@@ -42,6 +54,7 @@ class UserManager:
             user.password = hashlib.sha512(password).hexdigest()
             user.name = name
             user.email = email
+            user.save()
             response = '{"message": "ok"}'
 
         return response
