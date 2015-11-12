@@ -8,6 +8,7 @@ import json
 userauth = UserAuth()
 usermanager = UserManager()
 
+
 def morph_request(request, method):
     if hasattr(request, '_post'):
         del request._post
@@ -23,6 +24,7 @@ def morph_request(request, method):
         request.META['REQUEST_METHOD'] = method
 
     return request.POST
+
 
 def index(request):
     return render(request, 'agcal/index.html')
