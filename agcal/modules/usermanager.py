@@ -1,7 +1,5 @@
 from agcal.models import User
 
-import hashlib
-
 
 class UserManager:
 
@@ -51,7 +49,7 @@ class UserManager:
             response = '{"error": "No such user"}'
         else:
             user = usernames.first()
-            user.password = hashlib.sha512(password).hexdigest()
+            user.password = password
             user.name = name
             user.email = email
             user.save()
