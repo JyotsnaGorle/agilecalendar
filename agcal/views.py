@@ -37,12 +37,16 @@ def get_client_ip(request):
     return ip
 
 
+def is_sublist(sub_list, super_list):
+    return set(sub_list).issubset(set(super_list))
+
+
 def index(request):
     return render(request, 'agcal/index.html')
 
 
 def login_user(request):
-    if request.method != "POST" or 'username' not in request.POST or 'password' not in request.POST:
+    if request.method != "POST" or not is_sublist(['username', 'password'], request.POST):
         return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
 
     response = userauth.login_user(
@@ -69,13 +73,13 @@ def user(request):
     elif request.method == "PUT":
         request.PUT = morph_request(request, "PUT")
 
-        if 'username' not in request.PUT or 'password' not in request.PUT or 'name' not in request.PUT or 'email' not in request.PUT:
+        if not is_sublist(['username', 'password', 'name', 'email'], request.PUT):
             response = '{"error": "Invalid request"}'
         else:
             response = user_manager.add_user(
                 request.PUT['username'], request.PUT['password'], request.PUT['name'], request.PUT['email'])
     elif request.method == "POST":
-        if 'password' not in request.POST or 'name' not in request.POST or 'email' not in request.POST:
+        if not is_sublist(['password', 'name', 'email'], request.POST):
             response = '{"error": "Invalid request"}'
         else:
             response = user_manager.update_user(request.POST['username'], request.POST[
