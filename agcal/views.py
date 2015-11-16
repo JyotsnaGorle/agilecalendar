@@ -6,7 +6,7 @@ from agcal.modules.usermanager import UserManager
 import json
 
 userauth = UserAuth()
-usermanager = UserManager()
+user_manager = UserManager()
 
 
 def morph_request(request, method):
@@ -26,6 +26,17 @@ def morph_request(request, method):
     return request.POST
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    return ip
+
+
 def index(request):
     return render(request, 'agcal/index.html')
 
@@ -35,7 +46,8 @@ def login_user(request):
         return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
 
     response = userauth.login_user(
-        request.POST['username'], request.POST['password'])
+        request.POST['username'], request.POST['password'], get_client_ip(request))
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
@@ -43,7 +55,8 @@ def logout_user(request):
     if request.method != "POST" or not 'username' in request.POST:
         return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
 
-    response = userauth.logout_user(request.POST['username'])
+    response = userauth.logout_user(request.POST['username'], get_client_ip(request))
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
@@ -52,28 +65,28 @@ def user(request):
         if 'username' not in request.GET:
             response = '{"error": "Invalid request"}'
         else:
-            response = usermanager.show_user(request.GET['username'])
+            response = user_manager.show_user(request.GET['username'])
     elif request.method == "PUT":
         request.PUT = morph_request(request, "PUT")
 
         if 'username' not in request.PUT or 'password' not in request.PUT or 'name' not in request.PUT or 'email' not in request.PUT:
             response = '{"error": "Invalid request"}'
         else:
-            response = usermanager.add_user(
-                PUT['username'], PUT['password'], PUT['name'], PUT['email'])
+            response = user_manager.add_user(
+                request.PUT['username'], request.PUT['password'], request.PUT['name'], request.PUT['email'])
     elif request.method == "POST":
         if 'password' not in request.POST or 'name' not in request.POST or 'email' not in request.POST:
             response = '{"error": "Invalid request"}'
         else:
-            response = usermanager.update_user(request.POST['username'], request.POST[
+            response = user_manager.update_user(request.POST['username'], request.POST[
                                                'password'], request.POST['name'], request.POST['email'])
     elif request.method == "DELETE":
         request.DELETE = morph_request(request, "DELETE")
 
-        if 'username' not in DELETE:
+        if 'username' not in request.DELETE:
             response = '{"error": "Invalid request"}'
         else:
-            response = usermanager.remove_user(DELETE['username'])
+            response = user_manager.remove_user(request.DELETE['username'])
     else:
         response = '{"error": "Invalid request"}'
 
