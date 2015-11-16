@@ -42,7 +42,7 @@ def index(request):
 
 
 def login_user(request):
-    if request.method != "POST" or not 'username' in request.POST or not 'password' in request.POST:
+    if request.method != "POST" or 'username' not in request.POST or 'password' not in request.POST:
         return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
 
     response = userauth.login_user(
@@ -52,7 +52,7 @@ def login_user(request):
 
 
 def logout_user(request):
-    if request.method != "POST" or not 'username' in request.POST:
+    if request.method != "POST" or 'username' not in request.POST:
         return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
 
     response = userauth.logout_user(request.POST['username'], get_client_ip(request))
@@ -79,7 +79,7 @@ def user(request):
             response = '{"error": "Invalid request"}'
         else:
             response = user_manager.update_user(request.POST['username'], request.POST[
-                                               'password'], request.POST['name'], request.POST['email'])
+                'password'], request.POST['name'], request.POST['email'])
     elif request.method == "DELETE":
         request.DELETE = morph_request(request, "DELETE")
 
