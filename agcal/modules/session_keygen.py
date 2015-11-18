@@ -1,23 +1,30 @@
-import string
-import random
+from Crypto.Cipher import AES
+import base64
+import hashlib
+import json
+import agilecalendar.settings as settings
 
 
 class SessionKeygen:
 
     def __init__(self):
-        self.generated_keys = []
-        self.key_length = 50
+        self.BLOCK_SIZE = 32
+        self.PADDING = '{'
+        self.key = settings.SECRET_KEY
+        self.cipher = AES.new(hashlib.sha256(self.key).digest())
 
-    def get_new_key(self):
-        while True:
-            key = ''.join(random.SystemRandom().choice(
-                string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(self.key_length))
+    def _pad(self, block):
+        return block + (self.BLOCK_SIZE - len(block) % self.BLOCK_SIZE) * self.PADDING
 
-            if key not in self.generated_keys:
-                self.generated_keys.append(key)
-                break
+    def _encrypt(self, plain_text):
+        return base64.b64encode(self.cipher.encrypt(self._pad(plain_text)))
 
-        return key
+    def _decrypt(self, cipher_text):
+        return self.cipher.decrypt(base64.b64decode(cipher_text)).rstrip(self.PADDING)
 
-    def remove_key(self, key):
-        self.generated_keys.remove(key)
+    def get_key(self, username, ip, time):
+        plain_text = "{'username': %s, 'ip': %s, 'time': %s}" % (username, ip, time)
+        return self._encrypt(plain_text)
+
+    def get_info(self, cipher_text):
+        return json.loads(self._decrypt(cipher_text))

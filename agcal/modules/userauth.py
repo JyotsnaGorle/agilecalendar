@@ -1,14 +1,16 @@
 from agcal.models import User
 from agcal.modules.session_keygen import SessionKeygen
+from agilecalendar.settings import SESSION_EXPIRY, REDIS_PASSWORD
 
 import hashlib
+import redis
 
 
 class UserAuth:
-
     def __init__(self):
         self.response = {}
-        self.logged_in_users = {}
+        self.logged_in_users = redis.StrictRedis(
+            password=REDIS_PASSWORD)
         self.keygen = SessionKeygen()
 
     def _build_response(self, username, loggedin, sessionkey):
@@ -16,7 +18,7 @@ class UserAuth:
         self.response['loggedin'] = loggedin
         self.response['sessionkey'] = sessionkey
 
-    def login_user(self, username, password, ip):
+    def login_user(self, username, password, ip, timestamp):
         users = User.objects.filter(
             username=username, password=hashlib.sha512(password).hexdigest())
 
@@ -24,24 +26,13 @@ class UserAuth:
             self._build_response(username, False, None)
             return self.response
 
-        if username not in self.logged_in_users:
-            self.logged_in_users[username] = {}
-            self.logged_in_users[username][ip] = self.keygen.get_new_key()
-        elif ip not in self.logged_in_users[username]:
-            self.logged_in_users[username][ip] = self.keygen.get_new_key()
-
-        self._build_response(username, True, self.logged_in_users[username][ip])
+        key = self.keygen.get_key(username, ip, timestamp)
+        self.logged_in_users.setex(key, SESSION_EXPIRY, 1)
+        self._build_response(username, True, key)
 
         return self.response
 
-    def logout_user(self, username, ip):
-        if username in self.logged_in_users:
-            self.keygen.remove_key(self.logged_in_users[username][ip])
-            self.logged_in_users[username].pop(ip, None)
+    def logout_user(self, key):
+        self.logged_in_users.delete(key)
 
-            if len(self.logged_in_users[username].keys()) == 0:
-                self.logged_in_users.pop(username, None)
-
-        self._build_response(username, False, None)
-
-        return self.response
+        return "{'message': 'Ok'}"

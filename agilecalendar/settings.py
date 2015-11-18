@@ -3,7 +3,9 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
-SECRET_KEY = '%c%@0ca4ztvn^t&jz282s6f_dl4vthd$(w@zhtgn-#34eiv-#o'
+SECRET_KEY = 'secret'
+REDIS_PASSWORD = 'redis'
+SESSION_EXPIRY = 600
 
 DEBUG = True
 

@@ -4,6 +4,7 @@ from agcal.modules.userauth import UserAuth
 from agcal.modules.usermanager import UserManager
 
 import json
+import time
 
 userauth = UserAuth()
 user_manager = UserManager()
@@ -24,6 +25,10 @@ def morph_request(request, method):
         request.META['REQUEST_METHOD'] = method
 
     return request.POST
+
+
+def get_time():
+    return str(int(time.time() * 1000))
 
 
 def get_client_ip(request):
@@ -50,16 +55,16 @@ def login_user(request):
         return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
 
     response = userauth.login_user(
-        request.POST['username'], request.POST['password'], get_client_ip(request))
+        request.POST['username'], request.POST['password'], get_client_ip(request), get_time())
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 def logout_user(request):
-    if request.method != "POST" or 'username' not in request.POST:
+    if request.method != "POST" or 'key' not in request.POST:
         return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
 
-    response = userauth.logout_user(request.POST['username'], get_client_ip(request))
+    response = userauth.logout_user(request.POST['key'])
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
