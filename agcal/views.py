@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from agcal.modules.userauth import UserAuth
 from agcal.modules.usermanager import UserManager
-
 import json
 import time
 
@@ -52,7 +51,7 @@ def index(request):
 
 def login_user(request):
     if request.method != "POST" or not is_sublist(['username', 'password'], request.POST):
-        return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
+        return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
     response = userauth.login_user(
         request.POST['username'], request.POST['password'], get_client_ip(request), get_time())
@@ -62,7 +61,7 @@ def login_user(request):
 
 def logout_user(request):
     if request.method != "POST" or 'key' not in request.POST:
-        return HttpResponse('{"error": "Invalid request"}', content_type="application/json")
+        return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
     response = userauth.logout_user(request.POST['key'])
 
@@ -70,22 +69,27 @@ def logout_user(request):
 
 
 def user(request, username=None):
+    status = 200
+
     if request.method == "GET":
         if not username:
-            response = '{"error": "Invalid request"}'
+            response = '{"message": "Invalid request"}'
+            status = 400
         else:
             response = user_manager.show_user(username)
     elif request.method == "PUT":
         request.PUT = morph_request(request, "PUT")
 
         if not is_sublist(['username', 'password', 'name', 'email'], request.PUT):
-            response = '{"error": "Invalid request"}'
+            response = '{"message": "Invalid request"}'
+            status = 400
         else:
             response = user_manager.add_user(
                 request.PUT['username'], request.PUT['password'], request.PUT['name'], request.PUT['email'])
     elif request.method == "POST":
         if not is_sublist(['password', 'name', 'email'], request.POST):
-            response = '{"error": "Invalid request"}'
+            response = '{"message": "Invalid request"}'
+            status = 400
         else:
             response = user_manager.update_user(request.POST['username'], request.POST[
                 'password'], request.POST['name'], request.POST['email'])
@@ -93,13 +97,15 @@ def user(request, username=None):
         request.DELETE = morph_request(request, "DELETE")
 
         if not username:
-            response = '{"error": "Invalid request"}'
+            response = '{"message": "Invalid request"}'
+            status = 400
         else:
             response = user_manager.remove_user(username)
     else:
-        response = '{"error": "Invalid request"}'
+        response = '{"message": "Invalid request"}'
+        status = 400
 
-    return HttpResponse(response, content_type="application/json")
+    return HttpResponse(response, content_type="application/json", status=status)
 
 
 def card(request):
