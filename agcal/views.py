@@ -69,12 +69,12 @@ def logout_user(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
-def user(request):
+def user(request, username=None):
     if request.method == "GET":
-        if 'username' not in request.GET:
+        if not username:
             response = '{"error": "Invalid request"}'
         else:
-            response = user_manager.show_user(request.GET['username'])
+            response = user_manager.show_user(username)
     elif request.method == "PUT":
         request.PUT = morph_request(request, "PUT")
 
@@ -92,10 +92,10 @@ def user(request):
     elif request.method == "DELETE":
         request.DELETE = morph_request(request, "DELETE")
 
-        if 'username' not in request.DELETE:
+        if not username:
             response = '{"error": "Invalid request"}'
         else:
-            response = user_manager.remove_user(request.DELETE['username'])
+            response = user_manager.remove_user(username)
     else:
         response = '{"error": "Invalid request"}'
 

@@ -2,7 +2,6 @@ from agcal.models import User
 
 
 class UserManager:
-
     def show_user(self, username):
         usernames = User.objects.filter(username=username)
 
