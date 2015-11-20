@@ -1,0 +1,10 @@
+uwsgi:
+    enable-threads: true
+    gevent: true
+    async: 100
+    http: 0.0.0.0:8000
+    master: true
+    module: agilecalendar.wsgi
+    processes: 10
+    thunder-lock: true
+    vacuum: true
