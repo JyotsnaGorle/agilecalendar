@@ -23,9 +23,9 @@ class SessionKeygen:
     def _decrypt(self, cipher_text):
         return self.cipher.decrypt(base64.b64decode(cipher_text)).rstrip(self.PADDING)
 
-    def get_key(self, username, ip, time):
-        plain_text = "{'username': %s, 'ip': %s, 'time': %s}" % (username, ip, time)
+    def get_key(self, username, ip):
+        plain_text = '{"username": "%s", "ip": "%s"}' % (username, ip)
         return self._encrypt(plain_text)
 
     def get_info(self, cipher_text):
-        return json.loads(self._decrypt(cipher_text))
+        return self._decrypt(cipher_text)

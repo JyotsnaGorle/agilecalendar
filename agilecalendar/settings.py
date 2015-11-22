@@ -5,7 +5,7 @@ TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
 SECRET_KEY = '%c%@0ca4ztvn^t&jz282s6f_dl4vthd$(w@zhtgn-#34eiv-#o'
 REDIS_PASSWORD = 'S&UG4WD&s#zJM%kJCwrU2Rz8ckvdRxFeG5Rtxnr5!k8ZNeG?B4ju6-TYx&6ZAhjW'
-SESSION_EXPIRY = 600
+SESSION_EXPIRY = 600  # in seconds
 
 DEBUG = True
 

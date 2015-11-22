@@ -1,5 +1,4 @@
 import json
-import time
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -28,10 +27,6 @@ def morph_request(request, method):
     return request.POST
 
 
-def get_time():
-    return str(int(time.time() * 1000))
-
-
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
@@ -51,21 +46,19 @@ def index(request):
     return render(request, 'agcal/index.html')
 
 
-def login_user(request):
-    if request.method != "POST" or not is_sublist(['username', 'password'], request.POST):
+def login(request, username):
+    if request.method != "POST" or not is_sublist(['password'], request.POST):
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
-    response, status = userauth.login_user(
-        request.POST['username'], request.POST['password'], get_client_ip(request), get_time())
-
+    response, status = userauth.login_user(username, request.POST['password'], get_client_ip(request))
     return HttpResponse(json.dumps(response), content_type="application/json", status=status)
 
 
-def logout_user(request):
+def logout(request, username):
     if request.method != "POST" or 'key' not in request.POST:
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
-    response, status = userauth.logout_user(request.POST['key'])
+    response, status = userauth.logout_user(username, request.POST['key'])
     return HttpResponse(json.dumps(response), content_type="application/json", status=status)
 
 
