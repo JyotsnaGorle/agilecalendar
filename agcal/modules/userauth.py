@@ -1,9 +1,10 @@
+import hashlib
+
+import redis
+
 from agcal.models import User
 from agcal.modules.session_keygen import SessionKeygen
 from agilecalendar.settings import SESSION_EXPIRY, REDIS_PASSWORD
-
-import hashlib
-import redis
 
 
 class UserAuth:
@@ -24,15 +25,14 @@ class UserAuth:
 
         if users.count() == 0:
             self._build_response(username, False, None)
-            return self.response
+            return (self.response, 403)
 
         key = self.keygen.get_key(username, ip, timestamp)
         self.logged_in_users.setex(key, SESSION_EXPIRY, 1)
         self._build_response(username, True, key)
 
-        return self.response
+        return (self.response, 200)
 
     def logout_user(self, key):
         self.logged_in_users.delete(key)
-
-        return "{'message': 'Ok'}"
+        return ("{'message': 'Ok'}", 200)

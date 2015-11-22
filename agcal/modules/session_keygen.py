@@ -1,12 +1,13 @@
-from Crypto.Cipher import AES
 import base64
 import hashlib
 import json
+
+from Crypto.Cipher import AES
+
 import agilecalendar.settings as settings
 
 
 class SessionKeygen:
-
     def __init__(self):
         self.BLOCK_SIZE = 32
         self.PADDING = '{'

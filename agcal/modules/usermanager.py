@@ -2,50 +2,70 @@ from agcal.models import User
 
 
 class UserManager:
-    def show_user(self, username):
+    @staticmethod
+    def show_user(username):
         usernames = User.objects.filter(username=username)
 
         if not usernames.count():
-            response = '{"error": "No such user"}'
+            response = '{"message": "No such user"}'
+            status = 404
         else:
             user = usernames.first()
             response = '{"username": "%s", "name": "%s", "email": "%s"}' % (
                 user.username, user.name, user.email)
+            status = 200
 
-        return response
+        return (response, status)
 
-    def add_user(self, username, password, name, email):
+    @staticmethod
+    def check_username_email(username, email):
+        response = '{"message": "Ok"}'
+        status = 200
+
+        if User.objects.filter(username=username).count():
+            response = '{"message": "Username Exists"}'
+            status = 409
+
+        if User.objects.filter(email=email).count():
+            response = '{"message": "Email Exists"}'
+
+        return (response, status)
+
+    @staticmethod
+    def add_user(username, password, name, email):
         user = User(username, password, name, email)
 
-        usernames = User.objects.filter(username=username)
-        emails = User.objects.filter(email=email)
+        user_status = UserManager.check_username_email(username, email)
+        if user_status[1] == 409:
+            return user_status
 
-        if usernames.count():
-            response = '{"error": "Username Exists"}'
-        elif emails.count():
-            response = '{"error": "Email Exists"}'
-        else:
-            user.save()
-            response = '{"message": "ok"}'
+        user.save()
+        response = '{"message": "ok"}'
+        status = 200
 
-        return response
+        return (response, status)
 
-    def remove_user(self, username):
+    @staticmethod
+    def remove_user(username):
         usernames = User.objects.filter(username=username)
 
         if not usernames.count():
-            response = '{"error": "No such user"}'
+            response = '{"message": "No such user"}'
+            status = 404
         else:
             usernames.first().delete()
             response = '{"message": "ok"}'
+            status = 200
 
-        return response
+        return (response, status)
 
-    def update_user(self, username, password, name, email):
+    @staticmethod
+    def update_user(username, password, name, email):
         usernames = User.objects.filter(username=username)
 
         if not usernames.count():
-            response = '{"error": "No such user"}'
+            response = '{"message": "No such user"}'
+            status = 404
         else:
             user = usernames.first()
             user.password = password
@@ -53,5 +73,6 @@ class UserManager:
             user.email = email
             user.save()
             response = '{"message": "ok"}'
+            status = 200
 
-        return response
+        return (response, status)
