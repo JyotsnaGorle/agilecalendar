@@ -44,4 +44,4 @@ class UserAuth:
             message = "Ok"
             status = 200
 
-        return ("{'message': %s}" % message, status)
+        return ('{"message": "%s"}' % message, status)

@@ -59,7 +59,7 @@ def logout(request, username):
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
     response, status = userauth.logout_user(username, request.POST['key'])
-    return HttpResponse(json.dumps(response), content_type="application/json", status=status)
+    return HttpResponse(response, content_type="application/json", status=status)
 
 
 def user(request, username=None):
