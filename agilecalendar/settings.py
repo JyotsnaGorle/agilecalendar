@@ -1,9 +1,13 @@
 import os
+import random
+import string
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
-SECRET_KEY = '%c%@0ca4ztvn^t&jz282s6f_dl4vthd$(w@zhtgn-#34eiv-#o'
+chars = ''.join([string.ascii_letters, string.digits, string.punctuation]).replace('\'', '').replace('"', '').replace(
+    '\\', '')
+SECRET_KEY = ''.join([random.SystemRandom().choice(chars) for i in range(50)])
 REDIS_PASSWORD = 'S&UG4WD&s#zJM%kJCwrU2Rz8ckvdRxFeG5Rtxnr5!k8ZNeG?B4ju6-TYx&6ZAhjW'
 SESSION_EXPIRY = 600  # in seconds
 

@@ -1,6 +1,5 @@
 import base64
 import hashlib
-import json
 
 from Crypto.Cipher import AES
 
@@ -24,7 +23,7 @@ class SessionKeygen:
         return self.cipher.decrypt(base64.b64decode(cipher_text)).rstrip(self.PADDING)
 
     def get_key(self, username, ip):
-        plain_text = '{"username": "%s", "ip": "%s"}' % (username, ip)
+        plain_text = '{"username": "%s", "ip": "%s", "salt": "%s"}' % (username, ip, settings.SECRET_KEY)
         return self._encrypt(plain_text)
 
     def get_info(self, cipher_text):
