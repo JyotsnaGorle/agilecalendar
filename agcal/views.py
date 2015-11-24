@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 from agcal.modules.userauth import UserAuth
 from agcal.modules.usermanager import UserManager
@@ -46,6 +47,7 @@ def index(request):
     return render(request, 'agcal/index.html')
 
 
+@csrf_exempt
 def login(request, username):
     if request.method != "POST" or not is_sublist(['password'], request.POST):
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
@@ -54,6 +56,7 @@ def login(request, username):
     return HttpResponse(json.dumps(response), content_type="application/json", status=status)
 
 
+@csrf_exempt
 def logout(request, username):
     if request.method != "POST" or 'key' not in request.POST:
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
@@ -62,6 +65,7 @@ def logout(request, username):
     return HttpResponse(response, content_type="application/json", status=status)
 
 
+@csrf_exempt
 def user(request, username=None):
     if request.method == "GET":
         if not username:
