@@ -4,11 +4,10 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+import agcal.modules.usermanager as user_manager
 from agcal.modules.userauth import UserAuth
-from agcal.modules.usermanager import UserManager
 
-userauth = UserAuth()
-user_manager = UserManager()
+user_auth = UserAuth()
 
 
 def morph_request(request, method):
@@ -52,7 +51,7 @@ def login(request, username):
     if request.method != "POST" or not is_sublist(['password'], request.POST):
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
-    response, status = userauth.login_user(username, request.POST['password'], get_client_ip(request))
+    response, status = user_auth.login_user(username, request.POST['password'], get_client_ip(request))
     return HttpResponse(json.dumps(response), content_type="application/json", status=status)
 
 
@@ -61,7 +60,7 @@ def logout(request, username):
     if request.method != "POST" or 'key' not in request.POST:
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
-    response, status = userauth.logout_user(username, request.POST['key'])
+    response, status = user_auth.logout_user(username, request.POST['key'])
     return HttpResponse(response, content_type="application/json", status=status)
 
 
