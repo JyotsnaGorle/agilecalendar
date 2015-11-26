@@ -26,9 +26,10 @@ class UserAuth:
         except Exception:
             self._build_response(username, False, None)
             return (self.response, 403)
-        else:
-            if not check_password(password, user.password):
-                return (self.response, 403)
+
+        if not check_password(password, user.password):
+            self._build_response(username, False, None)
+            return (self.response, 403)
 
         value = self.keygen.get_key(username, ip)
         key = hashlib.sha256(value).hexdigest()
