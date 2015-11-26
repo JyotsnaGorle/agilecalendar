@@ -20,6 +20,12 @@ class UserAuth:
         self.response['loggedin'] = logged_in
         self.response['sessionkey'] = session_key
 
+    def _get_user(self, key):
+        value = self.logged_in_users.get(key)
+
+        if value:
+            return json.loads(self.keygen.get_info(value))['username']
+
     def login_user(self, username, password, ip):
         try:
             user = User.objects.get(username=username)
@@ -40,16 +46,15 @@ class UserAuth:
         return (self.response, 200)
 
     def logout_user(self, username, key):
-        status = 403
-        value = self.logged_in_users.get(key)
-
-        if not value:
+        if self._get_user(key) != username:
             message = 'Invalid/Expired Session'
-        elif json.loads(self.keygen.get_info(value))['username'] != username:
-            message = 'Session key mismatch'
+            status = 403
         else:
             self.logged_in_users.delete(key)
             message = "ok"
             status = 200
 
         return ('{"message": "%s"}' % message, status)
+
+    def is_valid_user(self, username, key):
+        return self._get_user(key) == username

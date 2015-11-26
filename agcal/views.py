@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+import agcal.modules.boardmanager as board_manager
 import agcal.modules.usermanager as user_manager
 from agcal.modules.userauth import UserAuth
 
@@ -42,6 +43,13 @@ def is_sublist(sub_list, super_list):
     return set(sub_list).issubset(set(super_list))
 
 
+def get_session_key(request):
+    try:
+        return request.META["HTTP_AUTHORIZATION"]
+    except KeyError:
+        return None
+
+
 def index(request):
     return render(request, 'agcal/index.html')
 
@@ -55,12 +63,13 @@ def login(request, username):
     return HttpResponse(json.dumps(response), content_type="application/json", status=status)
 
 
-@csrf_exempt
 def logout(request, username):
-    if request.method != "POST" or 'key' not in request.POST:
+    session_key = get_session_key(request)
+
+    if request.method != "GET" or not session_key:
         return HttpResponse('{"message": "Invalid request"}', content_type="application/json", status=400)
 
-    response, status = user_auth.logout_user(username, request.POST['key'])
+    response, status = user_auth.logout_user(username, session_key)
     return HttpResponse(response, content_type="application/json", status=status)
 
 
@@ -103,5 +112,22 @@ def user(request, username=None):
     return HttpResponse(response, content_type="application/json", status=status)
 
 
-def card(request):
+def boards(request, username):
+    session_key = get_session_key(request)
+
+    if request.method != "GET" or not session_key:
+        response = '{"message": "Invalid request"}'
+        status = 400
+    elif not user_auth.is_valid_user(username, session_key):
+        response = '{"message": "Invalid/Unauthorized session key"}'
+        status = 403
+    else:
+        response = board_manager.get_all_boards_for(username)
+        status = 200
+
+    return HttpResponse(response, content_type="application/json", status=status)
+
+
+@csrf_exempt
+def board(request, username, board_id):
     pass
