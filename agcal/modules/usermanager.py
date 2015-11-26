@@ -2,15 +2,13 @@ from agcal.models import User
 
 
 def show_user(username):
-    usernames = User.objects.filter(username=username)
-
-    if not usernames.count():
+    try:
+        user = User.objects.get(username=username)
+    except Exception:
         response = '{"message": "No such user"}'
         status = 404
     else:
-        user = usernames.first()
-        response = '{"username": "%s", "name": "%s", "email": "%s"}' % (
-            user.username, user.name, user.email)
+        response = '{"username": "%s", "name": "%s", "email": "%s"}' % (user.username, user.name, user.email)
         status = 200
 
     return (response, status)
@@ -20,11 +18,11 @@ def check_username_email(username, email):
     response = '{"message": "ok"}'
     status = 200
 
-    if User.objects.filter(username=username).count():
+    if User.objects.filter(username=username).exists():
         response = '{"message": "Username Exists"}'
         status = 409
 
-    if User.objects.filter(email=email).count():
+    if User.objects.filter(email=email).exists():
         response = '{"message": "Email Exists"}'
 
     return (response, status)
@@ -33,7 +31,7 @@ def check_username_email(username, email):
 def add_user(username, password, name, email):
     user = User(username, password, name, email)
 
-    user_status = UserManager.check_username_email(username, email)
+    user_status = check_username_email(username, email)
     if user_status[1] == 409:
         return user_status
 
