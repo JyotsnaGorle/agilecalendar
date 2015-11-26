@@ -91,9 +91,14 @@ def user(request, username=None):
             response, status = user_manager.add_user(username, request.PUT['password'], request.PUT['name'],
                                                      request.PUT['email'])
     elif request.method == "POST":
-        if not is_sublist(['password', 'name', 'email'], request.POST):
+        session_key = get_session_key(request)
+
+        if not is_sublist(['password', 'name', 'email'], request.POST) or not session_key:
             response = '{"message": "Invalid request"}'
             status = 400
+        elif not user_auth.is_valid_user(username, session_key):
+            response = '{"message": "Unauthorized"}'
+            status = 403
         else:
             response, status = user_manager.update_user(username, request.POST['password'],
                                                         request.POST['name'], request.POST['email'])
