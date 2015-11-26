@@ -1,5 +1,4 @@
-import hashlib
-
+from django.contrib.auth.hashers import make_password
 from django.db import models
 
 
@@ -10,8 +9,8 @@ class User(models.Model):
     email = models.CharField(max_length=100, unique=True, primary_key=True)
 
     def save(self, *args, **kwargs):
-        self.password = hashlib.sha512(self.password).hexdigest()
+        self.password = make_password(password=self.password, salt=None, hasher='pbkdf2_sha256')
         super(User, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return self.name
+        return "%s <%s>" % (self.name, self.email)

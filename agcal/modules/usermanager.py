@@ -61,13 +61,12 @@ class UserManager:
 
     @staticmethod
     def update_user(username, password, name, email):
-        usernames = User.objects.filter(username=username)
-
-        if not usernames.count():
+        try:
+            user = User.objects.get(username=username)
+        except Exception:
             response = '{"message": "No such user"}'
             status = 404
         else:
-            user = usernames.first()
             user.password = password
             user.name = name
             user.email = email

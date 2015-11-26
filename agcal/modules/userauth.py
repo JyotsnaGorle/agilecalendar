@@ -2,6 +2,7 @@ import hashlib
 import json
 
 import redis
+from django.contrib.auth.hashers import check_password
 
 from agcal.models import User
 from agcal.modules.session_keygen import SessionKeygen
@@ -20,11 +21,14 @@ class UserAuth:
         self.response['sessionkey'] = session_key
 
     def login_user(self, username, password, ip):
-        users = User.objects.filter(username=username, password=hashlib.sha512(password).hexdigest())
-
-        if users.count() == 0:
+        try:
+            user = User.objects.get(username=username)
+        except Exception:
             self._build_response(username, False, None)
             return (self.response, 403)
+        else:
+            if not check_password(password, user.password):
+                return (self.response, 403)
 
         value = self.keygen.get_key(username, ip)
         key = hashlib.sha256(value).hexdigest()
