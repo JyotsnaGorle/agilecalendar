@@ -122,6 +122,7 @@ def boards(request, username):
         response = '{"message": "Invalid/Unauthorized session key"}'
         status = 403
     else:
+        user_auth.reset_expiry_for(session_key)
         response = board_manager.get_all_boards_for(username)
         status = 200
 

@@ -58,3 +58,6 @@ class UserAuth:
 
     def is_valid_user(self, username, key):
         return self._get_user(key) == username
+
+    def reset_expiry_for(self, key):
+        self.logged_in_users.expire(key, SESSION_EXPIRY)
