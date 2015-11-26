@@ -49,7 +49,7 @@ class UserAuth:
             message = 'Session key mismatch'
         else:
             self.logged_in_users.delete(key)
-            message = "Ok"
+            message = "ok"
             status = 200
 
         return ('{"message": "%s"}' % message, status)

@@ -19,7 +19,7 @@ class UserManager:
 
     @staticmethod
     def check_username_email(username, email):
-        response = '{"message": "Ok"}'
+        response = '{"message": "ok"}'
         status = 200
 
         if User.objects.filter(username=username).count():
@@ -47,13 +47,13 @@ class UserManager:
 
     @staticmethod
     def remove_user(username):
-        usernames = User.objects.filter(username=username)
-
-        if not usernames.count():
+        try:
+            user = User.objects.get(username=username)
+        except Exception:
             response = '{"message": "No such user"}'
             status = 404
         else:
-            usernames.first().delete()
+            user.delete()
             response = '{"message": "ok"}'
             status = 200
 
