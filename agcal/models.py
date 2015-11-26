@@ -14,3 +14,12 @@ class User(models.Model):
 
     def __unicode__(self):
         return "%s <%s>" % (self.name, self.email)
+
+
+class Board(models.Model):
+    created_by = models.ForeignKey(User)
+    description = models.CharField(max_length=200)
+    name = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.name
