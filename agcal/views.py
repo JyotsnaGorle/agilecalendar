@@ -128,12 +128,22 @@ def boards(request, username):
         status = 403
     else:
         user_auth.reset_expiry_for(session_key)
-        response = board_manager.get_all_boards_for(username)
-        status = 200
+        response, status = board_manager.get_all_boards_for(username)
 
     return HttpResponse(response, content_type="application/json", status=status)
 
 
-@csrf_exempt
 def board(request, username, board_id):
-    pass
+    session_key = get_session_key(request)
+
+    if request.method != "GET" or not session_key:
+        response = '{"message": "Invalid request"}'
+        status = 400
+    elif not user_auth.is_valid_user(username, session_key):
+        response = '{"message": "Invalid/Unauthorized session key"}'
+        status = 403
+    else:
+        user_auth.reset_expiry_for(session_key)
+        response, status = board_manager.get_board_for(username, board_id)
+
+    return HttpResponse(response, content_type="application/json", status=status)
