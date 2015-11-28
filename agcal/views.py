@@ -104,10 +104,14 @@ def user(request, username=None):
                                                         request.POST['name'], request.POST['email'])
     elif request.method == "DELETE":
         request.DELETE = morph_request(request, "DELETE")
+        session_key = get_session_key(request)
 
-        if not username:
+        if not username or not session_key:
             response = '{"message": "Invalid request"}'
             status = 400
+        elif not user_auth.is_valid_user(username, session_key):
+            response = '{"message": "Unauthorized"}'
+            status = 403
         else:
             response, status = user_manager.remove_user(username)
     else:
