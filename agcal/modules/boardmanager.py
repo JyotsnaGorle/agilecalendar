@@ -69,3 +69,16 @@ def edit_board(creator, board_id, description, name):
         status = 404
 
     return (response, status)
+
+
+def delete_board(creator, board_id):
+    try:
+        board = Board.objects.get(created_by=User.objects.get(username=creator), id=board_id)
+        board.delete()
+        response = '{"message": "Ok"}'
+        status = 200
+    except User.DoesNotExist, Board.DoesNotExist:
+        response = '{"message": "No such user/board combo found"}'
+        status = 404
+
+    return (response, status)

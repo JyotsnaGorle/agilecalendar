@@ -164,6 +164,8 @@ def board(request, username, board_id=None):
         else:
             response, status = board_manager.edit_board(username, board_id, request.POST['description'],
                                                         request.POST['name'])
+    elif request.method == "DELETE":
+        response, status = board_manager.delete_board(username, board_id)
     else:
         response = '{"message": "Invalid request"}'
         status = 400
