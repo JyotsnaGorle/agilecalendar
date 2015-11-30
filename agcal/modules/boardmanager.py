@@ -54,3 +54,18 @@ def add_board(creator, description, name):
         status = 404
 
     return (response, status)
+
+
+def edit_board(creator, board_id, description, name):
+    try:
+        board = Board.objects.get(created_by=User.objects.get(username=creator), id=board_id)
+        board.description = description
+        board.name = name
+        board.save()
+        response = '{"message": "Ok"}'
+        status = 200
+    except User.DoesNotExist, Board.DoesNotExist:
+        response = '{"message": "No such user/board combo found"}'
+        status = 404
+
+    return (response, status)

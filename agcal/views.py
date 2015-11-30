@@ -157,6 +157,13 @@ def board(request, username, board_id=None):
             status = 400
         else:
             response, status = board_manager.add_board(username, request.PUT['description'], request.PUT['name'])
+    elif request.method == "POST":
+        if not is_sublist(['description', 'name'], request.POST):
+            response = '{"message": "Invalid request"}'
+            status = 400
+        else:
+            response, status = board_manager.edit_board(username, board_id, request.POST['description'],
+                                                        request.POST['name'])
     else:
         response = '{"message": "Invalid request"}'
         status = 400
