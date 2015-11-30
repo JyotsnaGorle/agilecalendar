@@ -13,4 +13,6 @@ urlpatterns = patterns('',
                        url(r'^api/user/(?P<username>[\w\-]+)/boards$', views.boards),
                        url(r'^api/user/(?P<username>[\w\-]+)/boards/$', views.boards),
                        url(r'^api/user/(?P<username>[\w\-]+)/board/(?P<board_id>[\w\-]+)$', views.board),
-                       url(r'^api/user/(?P<username>[\w\-]+)/board/(?P<board_id>[\w\-]+)/$', views.board))
+                       url(r'^api/user/(?P<username>[\w\-]+)/board/(?P<board_id>[\w\-]+)/$', views.board),
+                       url(r'^api/user/(?P<username>[\w\-]+)/board$', views.board),
+                       url(r'^api/user/(?P<username>[\w\-]+)/board/$', views.board))

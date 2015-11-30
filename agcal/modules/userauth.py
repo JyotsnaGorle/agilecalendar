@@ -24,12 +24,15 @@ class UserAuth:
         value = self.logged_in_users.get(key)
 
         if value:
-            return json.loads(self.keygen.get_info(value))['username']
+            try:
+                return json.loads(self.keygen.get_info(value))['username']
+            except ValueError:
+                return None
 
     def login_user(self, username, password, ip):
         try:
             user = User.objects.get(username=username)
-        except Exception:
+        except User.DoesNotExist:
             self._build_response(username, False, None)
             return (self.response, 403)
 
@@ -57,6 +60,8 @@ class UserAuth:
         return ('{"message": "%s"}' % message, status)
 
     def is_valid_user(self, username, key):
+        if not key:
+            return False
         return self._get_user(key) == username
 
     def reset_expiry_for(self, key):

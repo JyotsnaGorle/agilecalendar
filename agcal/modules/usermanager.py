@@ -4,7 +4,7 @@ from agcal.models import User
 def show_user(username):
     try:
         user = User.objects.get(username=username)
-    except Exception:
+    except User.DoesNotExist:
         response = '{"message": "No such user"}'
         status = 404
     else:
@@ -45,7 +45,7 @@ def add_user(username, password, name, email):
 def remove_user(username):
     try:
         user = User.objects.get(username=username)
-    except Exception:
+    except User.DoesNotExist:
         response = '{"message": "No such user"}'
         status = 404
     else:
@@ -59,7 +59,7 @@ def remove_user(username):
 def update_user(username, password, name, email):
     try:
         user = User.objects.get(username=username)
-    except Exception:
+    except User.DoesNotExist:
         response = '{"message": "No such user"}'
         status = 404
     else:

@@ -93,7 +93,7 @@ def user(request, username=None):
     elif request.method == "POST":
         session_key = get_session_key(request)
 
-        if not is_sublist(['password', 'name', 'email'], request.POST) or not session_key:
+        if not is_sublist(['password', 'name', 'email'], request.POST):
             response = '{"message": "Invalid request"}'
             status = 400
         elif not user_auth.is_valid_user(username, session_key):
@@ -106,7 +106,7 @@ def user(request, username=None):
         request.DELETE = morph_request(request, "DELETE")
         session_key = get_session_key(request)
 
-        if not username or not session_key:
+        if not username:
             response = '{"message": "Invalid request"}'
             status = 400
         elif not user_auth.is_valid_user(username, session_key):
@@ -124,7 +124,7 @@ def user(request, username=None):
 def boards(request, username):
     session_key = get_session_key(request)
 
-    if request.method != "GET" or not session_key:
+    if request.method != "GET":
         response = '{"message": "Invalid request"}'
         status = 400
     elif not user_auth.is_valid_user(username, session_key):
@@ -137,17 +137,28 @@ def boards(request, username):
     return HttpResponse(response, content_type="application/json", status=status)
 
 
-def board(request, username, board_id):
+@csrf_exempt
+def board(request, username, board_id=None):
     session_key = get_session_key(request)
 
-    if request.method != "GET" or not session_key:
-        response = '{"message": "Invalid request"}'
-        status = 400
-    elif not user_auth.is_valid_user(username, session_key):
+    if not user_auth.is_valid_user(username, session_key):
         response = '{"message": "Invalid/Unauthorized session key"}'
         status = 403
-    else:
-        user_auth.reset_expiry_for(session_key)
+        return HttpResponse(response, content_type="application/json", status=status)
+
+    user_auth.reset_expiry_for(session_key)
+    if request.method == "GET":
         response, status = board_manager.get_board_for(username, board_id)
+    elif request.method == "PUT":
+        request.PUT = morph_request(request, "PUT")
+
+        if not is_sublist(['description', 'name'], request.PUT):
+            response = '{"message": "Invalid request"}'
+            status = 400
+        else:
+            response, status = board_manager.add_board(username, request.PUT['description'], request.PUT['name'])
+    else:
+        response = '{"message": "Invalid request"}'
+        status = 400
 
     return HttpResponse(response, content_type="application/json", status=status)

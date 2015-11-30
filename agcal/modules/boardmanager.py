@@ -6,7 +6,7 @@ from agcal.models import Board, User
 def get_all_boards_for(username):
     try:
         user = User.objects.get(username=username)
-    except Exception:
+    except User.DoesNotExist:
         response = '{"message": "No such user"}'
         status = 404
     else:
@@ -35,8 +35,22 @@ def get_board_for(username, board_id):
             'id': board.id
         })
         status = 200
-    except Exception:
+    except Board.DoesNotExist:
         response = '{"message": "No such user/board combo found"}'
+        status = 404
+
+    return (response, status)
+
+
+def add_board(creator, description, name):
+    try:
+        user = User.objects.get(username=creator)
+        board = Board(created_by=user, description=description, name=name)
+        board.save()
+        response = '{"message": "Ok"}'
+        status = 200
+    except User.DoesNotExist:
+        response = '{"message": "No such user found"}'
         status = 404
 
     return (response, status)
