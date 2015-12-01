@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# This shell script takes care of starting and stopping
+# AgileCalendar prod server
+
+PIDFILE=/var/run/agcal.pid
+LOGFILE=/var/log/agcal.log
+RETVAL=0
+
+start() {
+    if [[ -f $PIDFILE ]] ; then
+        echo "AgileCalendar already started."
+        return 0
+    fi
+
+    echo -n $"Starting AgileCalendar: "
+    uwsgi -y uwsgi.yml --daemonize=$LOGFILE --pidfile=$PIDFILE
+    return $RETVAL
+}
+
+stop() {
+    if [[ ! -f $PIDFILE ]] ; then
+        echo "AgileCalendar already stopped."
+        return 0
+    fi
+
+    echo -n $"Stopping AgileCalendar: "
+    uwsgi --stop $PIDFILE
+    rm $PIDFILE
+    return $RETVAL
+}
+
+restart() {
+    stop
+    start
+}
+
+status() {
+    if [ -f $PIDFILE ] ; then
+        echo "AgileCalendar is running with pid: $(cat $PIDFILE)"
+    else
+        echo "AgileCalendar is stopped"
+    fi
+    return $RETVAL
+}
+
+case "$1" in
+start)
+    start
+    ;;
+
+stop)
+    stop
+    ;;
+
+restart|reload)
+    restart
+    ;;
+
+status)
+    status
+    ;;
+*)
+    echo $"Usage: $0 {start|stop|status|restart|reload}"
+    exit 1
+esac
