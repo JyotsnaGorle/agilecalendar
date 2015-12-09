@@ -34,11 +34,11 @@ class UserAuth:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             self._build_response(username, False, None)
-            return (self.response, 403)
+            return self.response, 403
 
         if not check_password(password, user.password):
             self._build_response(username, False, None)
-            return (self.response, 403)
+            return self.response, 403
 
         value = self.keygen.get_key(username, ip)
         key = hashlib.sha256(value).hexdigest()
@@ -46,7 +46,7 @@ class UserAuth:
         self.logged_in_users.setex(key, SESSION_EXPIRY, value)
         self._build_response(username, True, key)
 
-        return (self.response, 200)
+        return self.response, 200
 
     def logout_user(self, username, key):
         if self._get_user(key) != username:
@@ -57,7 +57,7 @@ class UserAuth:
             message = "ok"
             status = 200
 
-        return ('{"message": "%s"}' % message, status)
+        return '{"message": "%s"}' % message, status
 
     def is_valid_user(self, username, key):
         if not key:

@@ -11,7 +11,7 @@ def show_user(username):
         response = '{"username": "%s", "name": "%s", "email": "%s"}' % (user.username, user.name, user.email)
         status = 200
 
-    return (response, status)
+    return response, status
 
 
 def check_username_email(username, email):
@@ -25,7 +25,7 @@ def check_username_email(username, email):
     if User.objects.filter(email=email).exists():
         response = '{"message": "Email Exists"}'
 
-    return (response, status)
+    return response, status
 
 
 def add_user(username, password, name, email):
@@ -39,7 +39,7 @@ def add_user(username, password, name, email):
     response = '{"message": "ok"}'
     status = 200
 
-    return (response, status)
+    return response, status
 
 
 def remove_user(username):
@@ -53,7 +53,7 @@ def remove_user(username):
         response = '{"message": "ok"}'
         status = 200
 
-    return (response, status)
+    return response, status
 
 
 def update_user(username, password, name, email):
@@ -70,4 +70,4 @@ def update_user(username, password, name, email):
         response = '{"message": "ok"}'
         status = 200
 
-    return (response, status)
+    return response, status

@@ -23,7 +23,7 @@ def get_all_boards_for(username):
         response = json.dumps(details)
         status = 200
 
-    return (response, status)
+    return response, status
 
 
 def get_board_for(username, board_id):
@@ -39,7 +39,7 @@ def get_board_for(username, board_id):
         response = '{"message": "No such user/board combo found"}'
         status = 404
 
-    return (response, status)
+    return response, status
 
 
 def add_board(creator, description, name):
@@ -53,7 +53,7 @@ def add_board(creator, description, name):
         response = '{"message": "No such user found"}'
         status = 404
 
-    return (response, status)
+    return response, status
 
 
 def edit_board(creator, board_id, description, name):
@@ -68,7 +68,7 @@ def edit_board(creator, board_id, description, name):
         response = '{"message": "No such user/board combo found"}'
         status = 404
 
-    return (response, status)
+    return response, status
 
 
 def delete_board(creator, board_id):
@@ -81,4 +81,4 @@ def delete_board(creator, board_id):
         response = '{"message": "No such user/board combo found"}'
         status = 404
 
-    return (response, status)
+    return response, status
