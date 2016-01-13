@@ -1,0 +1,29 @@
+{
+  "name": "flink",
+  "version": "1.0.0",
+  "description": "Flink your life",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JyotsnaGorle/flink.git"
+  },
+  "keywords": [
+    "agile",
+    "calendar",
+    "management"
+  ],
+  "author": "Jyotsna Gorle, Rahul Dé",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/JyotsnaGorle/flink/issues"
+  },
+  "homepage": "https://github.com/JyotsnaGorle/flink#readme",
+  "dependencies": {
+    "mysql": "^2.10.2",
+    "sequelize": "^3.17.1",
+    "sqlite": "^0.0.2"
+  }
+}
