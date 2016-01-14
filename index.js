@@ -1,7 +1,8 @@
 var koa = require('koa');
+var mount = require('koa-mount');
+
 var router = require("./app/router");
 var ports = require("./config/ports");
-var mount = require('koa-mount');
 
 var app = koa();
 var api = router.api;
