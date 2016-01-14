@@ -6,7 +6,7 @@ module.exports.putUser = function* (next) {
     var email = this.request.body.email;
     var password = this.request.body.password;
 
-    var success = function() {
+    var success = function () {
         this.type = 'json';
         this.status = 200;
         this.body = {
@@ -27,9 +27,9 @@ module.exports.putUser = function* (next) {
         email: email,
         username: username,
         password: password
-    }).then(function() {
+    }).then(function () {
         success();
-    }, function() {
+    }, function () {
         failure();
     });
 };
