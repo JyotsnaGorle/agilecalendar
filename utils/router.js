@@ -1,5 +1,7 @@
 var Router = require('koa-router');
 
+var userHandler = require('../handlers/user_handler');
+
 var api = new Router();
 
 var status = function* (next) {
@@ -10,6 +12,7 @@ var status = function* (next) {
     };
 };
 
+api.put('/user/:username', userHandler.putUser);
 api.get('/status', status);
 
 module.exports.api = api;
