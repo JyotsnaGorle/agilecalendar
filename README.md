@@ -32,6 +32,5 @@ https://nodejs.org/en/download/
 
 - Clone this repository
 - In the repo directory, run ``` npm install ```
-- Run migrations using ``` sequelize db:migrate ``` for dev db
-- For other envs, use --env production|test|development
+- Run migrations using ``` sequelize --env production|test|development db:migrate ```
 - run the app using ``` node --harmony index ``` on port 8000
