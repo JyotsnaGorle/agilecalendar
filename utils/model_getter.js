@@ -6,7 +6,8 @@ var orm = new Sequelize(dbConfig.name, dbConfig.username, dbConfig.password, {
     host: dbConfig.host,
     dialect: dbConfig.dialect,
     storage: dbConfig.storage,
-    logging: () => global.appMode === 'development'
+    logging: global.appMode === 'development',
+    omitNull: true
 });
 
 module.exports.get = function (model) {
