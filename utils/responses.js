@@ -1,15 +1,13 @@
-module.exports.success = function (status, message) {
+module.exports.success = function (response, status) {
     this.type = 'json';
     this.status = status || 200;
-    this.body = {
-        'status': message || "Ok"
-    };
+    this.body = response || {
+            response: "Ok"
+        };
 };
 
-module.exports.failure = function (status, message) {
+module.exports.failure = function (response, status) {
     this.type = 'json';
     this.status = status;
-    this.body = {
-        'status': message
-    };
+    this.body = response;
 };

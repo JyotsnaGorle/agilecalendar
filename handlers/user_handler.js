@@ -1,6 +1,29 @@
 var User = require('../utils/model_getter').get('user');
 var responses = require('../utils/responses');
 
+module.exports.getUser = function* (next) {
+    var username = this.params.username;
+    var onSuccess = responses.success.bind(this);
+    var onFailure = responses.failure.bind(this);
+
+    yield User.find({
+        attributes: [
+            'name',
+            'email'
+        ],
+        where: {
+            username: username
+        }
+    }).then(function (user) {
+        if (user)
+            onSuccess(user);
+        else
+            onFailure({
+                response: "No such user found"
+            }, 404);
+    });
+};
+
 module.exports.putUser = function* (next) {
     var username = this.params.username;
     var name = this.request.body.name;
@@ -17,6 +40,8 @@ module.exports.putUser = function* (next) {
     }).then(function () {
         onSuccess();
     }, function () {
-        onFailure(409, "User already exists");
+        onFailure({
+            response: "User already exists"
+        }, 409);
     });
 };
