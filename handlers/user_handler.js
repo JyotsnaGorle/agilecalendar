@@ -1,26 +1,13 @@
 var User = require('../utils/model_getter').get('user');
+var responses = require('../utils/responses');
 
 module.exports.putUser = function* (next) {
     var username = this.params.username;
     var name = this.request.body.name;
     var email = this.request.body.email;
     var password = this.request.body.password;
-
-    var success = function () {
-        this.type = 'json';
-        this.status = 200;
-        this.body = {
-            'status': 'Ok!'
-        };
-    }.bind(this);
-
-    var failure = function () {
-        this.type = 'json';
-        this.status = 409;
-        this.body = {
-            'status': 'Username exists'
-        };
-    }.bind(this);
+    var onSuccess = responses.success.bind(this);
+    var onFailure = responses.failure.bind(this);
 
     yield User.create({
         name: name,
@@ -28,8 +15,8 @@ module.exports.putUser = function* (next) {
         username: username,
         password: password
     }).then(function () {
-        success();
+        onSuccess();
     }, function () {
-        failure();
+        onFailure(409, "User already exists");
     });
 };

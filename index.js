@@ -6,7 +6,7 @@ var program = require('commander');
 program
     .version('1.0.0')
     .description('Flink your life!')
-    .option('-e, --env [development]', 'Specify running environment: development|test|production')
+    .option('-e, --env', 'Specify running environment: [development]|test|production')
     .parse(process.argv);
 
 global.appMode = program.env ? program.args[0] : 'development';
