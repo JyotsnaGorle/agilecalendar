@@ -14,6 +14,7 @@ var status = function* (next) {
 
 api.get('/user/:username', userHandler.getUser);
 api.put('/user/:username', userHandler.putUser);
+api.post('/user/:username', userHandler.updateUser);
 api.get('/status', status);
 
 module.exports.api = api;

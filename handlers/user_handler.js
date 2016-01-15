@@ -45,3 +45,29 @@ module.exports.putUser = function* (next) {
         }, 409);
     });
 };
+
+module.exports.updateUser = function* (next) {
+    var username = this.params.username;
+    var name = this.request.body.name;
+    var email = this.request.body.email;
+    var password = this.request.body.password;
+    var onSuccess = responses.success.bind(this);
+    var onFailure = responses.failure.bind(this);
+
+    yield User.update({
+        name: name,
+        email: email,
+        password: password
+    }, {
+        where: {
+            username: username
+        }
+    }).then(function (user) {
+        if (user[0])
+            onSuccess();
+        else
+            onFailure({
+                response: "No such user found"
+            }, 404);
+    });
+};
