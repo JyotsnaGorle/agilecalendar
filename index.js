@@ -13,9 +13,6 @@ global.appMode = program.env
 && program.args.length
 && ['production', 'development', 'test'].indexOf(program.args) > -1 ? program.args[0] : 'development';
 
-console.log(global.appMode);
-process.exit();
-
 var router = require("./utils/router");
 var ports = require("./config/ports");
 
