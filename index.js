@@ -6,10 +6,10 @@ var program = require('commander');
 program
     .version('1.0.0')
     .description('Flink your life!')
-    .option('-e, --env', 'Specify db: [development]|test|production')
+    .option('-e, --db', 'Specify db: [development]|test|production')
     .parse(process.argv);
 
-global.db = program.env
+global.db = program.db
 && program.args.length
 && ['production', 'development', 'test'].indexOf(program.args) > -1 ? program.args[0] : 'development';
 
@@ -22,5 +22,5 @@ var api = router.api;
 app.use(bodyParser());
 app.use(mount('/api', api.middleware()));
 
-console.log("Flink is listening on 0.0.0.0:" + ports.app_port)
+console.log("Flink is listening on 0.0.0.0:" + ports.app_port);
 app.listen(ports.app_port);
