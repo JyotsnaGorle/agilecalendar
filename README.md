@@ -39,4 +39,5 @@ https://nodejs.org/en/download/
 - Clone this repository
 - In the repo directory, run ``` npm install ```
 - Run migrations using ``` sequelize --env production|test|[development] db:migrate ```
+- For development run ``` gulp ``` in the root folder
 - run the app using ``` node --harmony index --env production|test|[development] ``` on port 8000
