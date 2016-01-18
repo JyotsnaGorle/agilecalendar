@@ -25,6 +25,11 @@ sudo apt-get install nodejs
 **Others**
 https://nodejs.org/en/download/
 
+**sequelize-cli NPM module** (run with root/admin privileges)
+```
+[sudo] npm install -g sequelize-cli
+```
+
 ###**Supported Databases**
 - MySQL/MariaDB
 - SQLite

@@ -29,7 +29,6 @@
     "koa-router": "^5.3.0",
     "mysql": "^2.10.2",
     "sequelize": "^3.17.1",
-    "sequelize-cli": "^2.3.0",
     "sqlite": "^0.0.2"
   }
 }
