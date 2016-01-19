@@ -49,7 +49,7 @@ module.exports.updateUser = function* (next) {
     yield User.update({
         name: this.request.body.name,
         email: this.request.body.email,
-        password: this.request.body.password
+        password: flinkCrypto.hash(this.request.body.password)
     }, {
         where: {
             username: this.params.username
