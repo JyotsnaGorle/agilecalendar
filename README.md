@@ -49,4 +49,4 @@ https://nodejs.org/en/download/
 - run the app using ``` node --harmony index --db production|test|[development] ``` on port 8000
 
 ## Running Tests
-- Run ``` mocha test ``` or ``` npm test ```
+- Run ``` gulp test ```
