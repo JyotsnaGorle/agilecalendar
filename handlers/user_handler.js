@@ -1,5 +1,6 @@
 var User = require('../utils/model_getter').get('user');
 var responses = require('../utils/responses');
+var flinkCrypto = require('../utils/flink_crypto');
 
 module.exports.getUser = function* (next) {
     var succeeded = responses.success.bind(this);
@@ -31,7 +32,7 @@ module.exports.putUser = function* (next) {
         name: this.request.body.name,
         email: this.request.body.email,
         username: this.params.username,
-        password: this.request.body.password
+        password: flinkCrypto.hash(this.request.body.password)
     }).then(function () {
         succeeded();
     }, function () {

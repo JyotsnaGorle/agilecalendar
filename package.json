@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/JyotsnaGorle/flink#readme",
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "commander": "^2.9.0",
     "koa": "^1.1.2",
     "koa-body-parser": "^1.1.2",
