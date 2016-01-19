@@ -2,7 +2,7 @@ var app = require('../index.js').app;
 var request = require('co-supertest').agent(app.listen(8000));
 var expect = require('chai').expect;
 
-describe('/api/status', function () {
+describe('GET /api/status', function () {
     it('should return status as {"status":"Flink says Hallo!"}', function *() {
         var res = yield request.get('/api/status').expect(200).end();
 
