@@ -46,11 +46,12 @@ module.exports.updateUser = function* (next) {
     var succeeded = responses.success.bind(this);
     var failed = responses.failure.bind(this);
 
-    yield User.update({
-        name: this.request.body.name,
-        email: this.request.body.email,
-        password: flinkCrypto.hash(this.request.body.password)
-    }, {
+    var updateFields = {};
+    Object.keys(this.request.body).forEach(function(key) {
+        updateFields[key] = this.request.body[key];
+    }.bind(this));
+
+    yield User.update(updateFields, {
         where: {
             username: this.params.username
         }
