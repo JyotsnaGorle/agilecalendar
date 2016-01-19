@@ -1,4 +1,4 @@
-#Flink
+# Flink
 flink your life!
 
 *Proper fancy docs coming soon :)*
@@ -6,7 +6,7 @@ flink your life!
 -------------------------------------------
 
 ## Requirements
-###**node.js 4+ and npm**
+### **node.js 4+ and npm**
 
 **Install for**
 
@@ -25,12 +25,12 @@ sudo apt-get install nodejs
 **Others**
 https://nodejs.org/en/download/
 
-**sequelize-cli NPM module** (run with root/admin privileges)
+### **sequelize-cli NPM module** (run with root/admin privileges)
 ```
 [sudo] npm install -g sequelize-cli
 ```
 
-###**Supported Databases**
+### **Supported Databases**
 - MySQL/MariaDB
 - SQLite
 - Postgres
