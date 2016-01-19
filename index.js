@@ -22,5 +22,9 @@ var api = router.api;
 app.use(bodyParser());
 app.use(mount('/api', api.middleware()));
 
-console.log("Flink is listening on 0.0.0.0:" + ports.app_port);
-app.listen(ports.app_port);
+if (!module.parent) {
+    console.log("Flink is listening on 0.0.0.0:" + ports.app_port);
+    app.listen(ports.app_port);
+} else {
+    module.exports.app = app;
+}

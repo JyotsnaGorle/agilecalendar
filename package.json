@@ -4,7 +4,7 @@
   "description": "Flink your life",
   "main": "index.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -33,7 +33,12 @@
     "sqlite": "^0.0.2"
   },
   "devDependencies": {
+    "chai": "^3.4.1",
+    "co-supertest": "0.0.10",
     "gulp": "^3.9.0",
-    "gulp-nodemon": "^2.0.6"
+    "gulp-exit": "0.0.2",
+    "gulp-mocha-co": "^0.4.1-co.3",
+    "gulp-nodemon": "^2.0.6",
+    "supertest": "^1.1.0"
   }
 }
