@@ -13,7 +13,7 @@ gulp.task('nodemon', function () {
 gulp.task('test', function () {
     gulp.src(['test/*.js'])
         .pipe(mocha({
-            reporter: 'nyan'
+            reporter: 'spec'
         }))
         .pipe(exit());
 });
